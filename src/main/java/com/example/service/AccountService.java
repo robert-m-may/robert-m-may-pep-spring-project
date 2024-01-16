@@ -27,7 +27,6 @@ public class AccountService {
 
     public Account accountLogIn(Account account) {
         Account checkAccount = findAccountByUsername(account.getUsername());
-        return (checkAccount != null
-                && checkAccount.getPassword().equals(account.getPassword())) ? checkAccount : null;
+        return (checkAccount != null && checkAccount.getPassword().equals(account.getPassword())) ? checkAccount : null;
     }
 }
