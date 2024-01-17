@@ -29,9 +29,9 @@ import com.example.entity.Message;
 @RestController
 public class SocialMediaController {
     
-    @Autowired(required = true)
+    @Autowired
     private AccountService accountService;
-    @Autowired(required = true)
+    @Autowired
     private MessageService messageService;
 
     @PostMapping("/register")
@@ -40,23 +40,24 @@ public class SocialMediaController {
             return ResponseEntity.status(400).build();
         }
         Account acc = accountService.registerAccount(account);
-        if (acc == null)
+        if (acc == null) {
             return ResponseEntity.status(409).build();
+        }
         return ResponseEntity.ok(acc);
     }
 
     @PostMapping("/login")
     public @ResponseBody ResponseEntity<Account> accountLogIn(@RequestBody Account account) {
         Account acc = accountService.accountLogIn(account);
-        if (acc == null)
+        if (acc == null) {
             return ResponseEntity.status(401).build();
+        }
         return ResponseEntity.ok(acc);
     }
 
     @PostMapping("/messages")
     public @ResponseBody ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        if (message.getMessage_text().length() < 1 || message.getMessage_text().length() > 255
-                || accountService.findAccountById(message.getPosted_by()) == null) {
+        if (message.getMessage_text().length() < 1 || message.getMessage_text().length() > 255 || accountService.findAccountById(message.getPosted_by()) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(messageService.createMessage(message));
@@ -84,15 +85,14 @@ public class SocialMediaController {
     public @ResponseBody ResponseEntity<Integer> updateMessage(@RequestBody Message message,
             @PathVariable("message_id") Integer id) {
         Message messageDB = messageService.getMessageById(id);
-        if (message.getMessage_text().length() < 1 || message.getMessage_text().length() > 255
-                || messageDB == null) {
+        if (message.getMessage_text().length() < 1 || message.getMessage_text().length() > 255 || messageDB == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(messageService.updateMessage(message, messageDB));
     }
 
     @GetMapping("accounts/{account_id}/messages")
-    public @ResponseBody ResponseEntity<List<Message>> getAllMessagesByUser(  @PathVariable("account_id") Integer account_id) {
+    public @ResponseBody ResponseEntity<List<Message>> getAllMessagesByUser(@PathVariable("account_id") Integer account_id) {
         return ResponseEntity.ok(messageService.getUserMessages(account_id));
     }
 

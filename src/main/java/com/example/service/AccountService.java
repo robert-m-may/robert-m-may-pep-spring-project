@@ -7,22 +7,22 @@ import com.example.entity.Account;
 import com.example.repository.AccountRepository;
 @Service
 public class AccountService {
-    @Autowired(required = true)
-    private AccountRepository AccountDAO;
+    @Autowired
+    private AccountRepository AccountService;
 
     public Account findAccountByUsername(String username) {
-        Optional<Account> optionalAccount = AccountDAO.findByUsername(username);
+        Optional<Account> optionalAccount = AccountService.findByUsername(username);
         return optionalAccount.orElse(null);
     }
 
     public Account findAccountById(Integer account_id) {
-        Optional<Account> optionalAccount = AccountDAO.findById(account_id);
+        Optional<Account> optionalAccount = AccountService.findById(account_id);
         return optionalAccount.orElse(null);
     }
 
     public Account registerAccount(Account account) {
         Account checkAccount = findAccountByUsername(account.getUsername());
-        return (checkAccount != null) ? null : AccountDAO.save(account);
+        return (checkAccount != null) ? null : AccountService.save(account);
     }
 
     public Account accountLogIn(Account account) {
